@@ -7,17 +7,17 @@ if (!isset($_SESSION['id'])) {
     exit;
 }
 
-$currentPage = "Tiket";
+$currentPage = "Riwayat";
 
 $user_id = $_SESSION['id'];
 
-$query = mysqli_query($konek, "SELECT orders.*, concerts.name, concerts.venue, concerts.event_date 
+$query = mysqli_query($konek, "SELECT orders.*, concerts.name
 FROM orders JOIN concerts 
-ON orders.concert_id = concerts.id 
-WHERE orders.user_id = '$user_id' 
+ON orders.concert_id = concerts.id
+WHERE orders.user_id = '$user_id'
 ORDER BY orders.id DESC");
-
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -59,7 +59,7 @@ ORDER BY orders.id DESC");
             font-family: 'Nunito', sans-serif;
         }
 
-        .container-tiketKu {
+        .container-riwayat {
             background-image: url(img/bg_concert.jpg);
             background-size: cover;
             background-position: center;
@@ -134,95 +134,77 @@ ORDER BY orders.id DESC");
             align-items: center;
             justify-content: center;
             margin-top: 30px;
-
             font-weight: bolder;
             color: #BE185D;
         }
 
-        .title {
+        .title p {
             color: darkgray;
             font-weight: bolder;
         }
 
-        .tiketKu-section {
+        .riwayat-section {
             width: 90%;
         }
 
-        .tiketKu-card {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 25px;
-            margin-bottom: 20px;
-
-            background-color: var(--white);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
-            border: 2px solid var(--purple-m);
-            border-radius: 18px;
-        }
-
-        .tiketKu-card.cancelled {
-            opacity: 0.45;
-            background-color: #f5f5f5;
-            border: 2px solid #bdbdbd;
-        }
-
-        .tiketKu-card.cancelled .btn-cancel {
-            padding: 8px 20px;
+        .table-box {
+            width: 90%;
+            margin-top: 30px;
+            background: #FFFFFF;
             border-radius: 20px;
-            pointer-events: none;
-            background: #ccc;
-            border-color: #999;
-            color: #666;
-
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, .08);
         }
 
-        .tiketKu-card.cancelled h4,
-        .tiketKu-card.cancelled p {
-            color: #888;
-        }
-
-        .left h4 {
-            color: #31204f;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .left p {
-            color: darkgray;
-            margin: 3px 0;
-        }
-
-        .right {
-            text-align: right;
-        }
-
-        .right h4 {
+        .table thead th {
+            background: #FBCFE8;
             color: #BE185D;
-            font-weight: bolder;
-            margin-bottom: 15px;
+            font-size: 13px;
+            font-weight: 800;
+            padding: 18px;
         }
 
-        .btn-cancel {
+        .table tbody td {
+            padding: 18px;
+            border-top: 1px solid #eee;
+            color: #555;
+        }
+
+        .table tbody tr:hover {
+            background: #FFF8FC;
+        }
+
+        .btn-edit {
+            background: #FFF4C9;
+            color: #C58A00;
             padding: 8px 20px;
-            display: inline-block;
+            border-radius: 30px;
             text-decoration: none;
-            border: 2px solid #ff4c4c;
-            border-radius: 20px;
-            background-color: #ffe1e1;
             font-weight: bold;
-            color: darkred;
+            margin-right: 5px;
         }
 
-        .btn-cancel:hover {
-            background: #ff4c4c;
-            color: white;
+        .btn-delete {
+            background: #FFE2E2;
+            color: #D62828;
+            padding: 8px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .btn-edit:hover {
+            background: #FFE9A8;
+        }
+
+        .btn-delete:hover {
+            background: #FFBDBD;
         }
     </style>
 </head>
 
 <body>
-    <div class="container-tiketKu">
+    <div class="container-riwayat">
         <div class="overlay">
             <div class="navbar-custom">
                 <div class="logo">
@@ -234,47 +216,58 @@ ORDER BY orders.id DESC");
                     <a href="konser.php" class="<?= ($currentPage == 'Konser') ? 'active-menu' : ''; ?>">Konser</a>
                     <a href="tiketKu.php" class="<?= ($currentPage == 'Tiket') ? 'active-menu' : ''; ?>">TiketKu</a>
                     <a href="riwayat.php" class="<?= ($currentPage == 'Riwayat') ? 'active-menu' : ''; ?>">Riwayat</a>
-                    <a href="logout.php" class="<?= ($currentPage == 'Riwayat') ? 'active-menu' : ''; ?>">Logout</a>
+                    <a href="logout.php" class="<?= ($currentPage == 'Logout') ? 'active-menu' : ''; ?>">Logout</a>
                 </div>
 
             </div>
 
             <div class="title">
-                <h3>Tiket Saya</h3>
-                <p>Tunjukan kode tiketmu di pintu masuk area konser.</p>
+                <h3>Riwayat Aktivitas</h3>
+                <p>Pantau semua riwayat transaksi dan penggunaan tiketmu di sini.</p>
             </div>
 
-            <div class="tiketKu-section">
-                <?php while ($data = mysqli_fetch_assoc($query)) { ?>
-                    <div class="tiketKu-card <?= ($data['status'] == 'cancelled') ? 'cancelled' : '' ?>">
-                        <div class="left">
-                            <h4><?= $data['name'] ?></h4>
-                            <p><?= $data['venue'] ?></p>
-                            <p><?= date("d M Y • H:i", strtotime($data['event_date'])) ?></p>
-                            <p>
-                                <?= $data['quantity'] ?> tiket • Dibeli
-                                <?= date("d M Y", strtotime($data['created_at'])) ?>
-                            </p>
-                            <p><?= $data['order_code'] ?></p>
-                        </div>
+            <div class="table-box">
+                <table class="table table-borderless align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>KODE</th>
+                            <th>KONSER</th>
+                            <th>QTY</th>
+                            <th>TOTAL BAYAR</th>
+                            <th>STATUS</th>
+                            <th>WAKTU AKTIVITAS</th>
+                            <th>AKSI</th>
+                        </tr>
+                    </thead>
 
-                        <div class="right">
-                            <h4>Rp <?= number_format($data['total_price'], 0, ",", ".") ?></h4>
-
-                            <?php if ($data['status'] == 'active') { ?>
-                                <a href="cancelled.php?id=<?= $data['id'] ?>" class="btn-cancel">
-                                    Batalkan
-                                </a>
-                            <?php } elseif ($data['status'] == 'cancelled') { ?>
-                                <span class="badge bg-secondary">Dibatalkan</span>
-                            <?php } else { ?>
-                                <span class="badge bg-success">Used</span>
-                            <?php } ?>
-                        </div>
-                    </div>
-                <?php } ?>
+                    <tbody>
+                        <?php while ($data = mysqli_fetch_assoc($query)) { ?>
+                            <tr>
+                                <td><?= $data['order_code'] ?></td>
+                                <td><?= $data['name'] ?></td>
+                                <td><?= $data['quantity'] ?></td>
+                                <td><?= number_format($data['total_price'], 0, ",", ".") ?></td>
+                                <td>
+                                    <?php
+                                    if ($data['status'] == 'active') {
+                                        echo "Dibeli";
+                                    } elseif ($data['status'] == 'used') {
+                                        echo "Digunakan";
+                                    } else {
+                                        echo "Dibatalkan";
+                                    }
+                                    ?>
+                                </td>
+                                <td><?= date("d M Y, H:i", strtotime($data['created_at'])) ?></td>
+                                <td>
+                                    <a href="edit.php" class="btn-edit">Edit</a>
+                                    <a href="delete.php" class="btn-delete">Delete</a>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
             </div>
-
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"

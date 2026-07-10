@@ -155,12 +155,12 @@ $queryKonser = mysqli_query($konek, "SELECT id, name, venue, event_date, price_f
             color: darkgray;
             font-weight: bolder;
         }
-        
+
         .search-section {
             position: relative;
             width: 60%;
             display: flex;
-            
+
             margin-top: 30px;
             margin-bottom: 28px;
 
@@ -203,7 +203,7 @@ $queryKonser = mysqli_query($konek, "SELECT id, name, venue, event_date, price_f
             text-decoration: none;
         }
 
-        .concer-section a{
+        .concer-section a {
             text-decoration: none;
         }
 
@@ -211,7 +211,6 @@ $queryKonser = mysqli_query($konek, "SELECT id, name, venue, event_date, price_f
             padding: 10px;
             border-radius: 20px;
             height: 100%;
-            
         }
 
         .card-body {
@@ -243,8 +242,6 @@ $queryKonser = mysqli_query($konek, "SELECT id, name, venue, event_date, price_f
             font-weight: bold;
             margin-bottom: 0;
         }
-
-        
     </style>
 </head>
 
@@ -282,7 +279,7 @@ $queryKonser = mysqli_query($konek, "SELECT id, name, venue, event_date, price_f
 
             <div class="concer-section">
                 <?php while ($konser = mysqli_fetch_assoc($queryKonser)) { ?>
-                <?php $formatDate = date("d M Y • H:i", strtotime($konser['event_date'])); ?>
+                    <?php $formatDate = date("d M Y • H:i", strtotime($konser['event_date'])); ?>
                     <a href="order.php?id=<?= $konser['id'] ?>">
 
                         <div class="card">
@@ -290,7 +287,8 @@ $queryKonser = mysqli_query($konek, "SELECT id, name, venue, event_date, price_f
                                 <h5 class="card-title"><?= $konser['name'] ?></h5>
                                 <p class="card-textplace"><?= $konser['venue'] ?></p>
                                 <p class="card-textdate"><?= $formatDate ?></p>
-                                <p class="card-textprice">Mulai Rp <?=number_format($konser['price_festival'], 0, ',', '.')  ?></p>
+                                <p class="card-textprice">Mulai Rp
+                                    <?= number_format($konser['price_festival'], 0, ',', '.') ?></p>
 
                             </div>
                         </div>
@@ -299,6 +297,9 @@ $queryKonser = mysqli_query($konek, "SELECT id, name, venue, event_date, price_f
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>
