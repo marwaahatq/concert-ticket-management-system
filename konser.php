@@ -262,7 +262,7 @@ $queryKonser = mysqli_query($konek, "SELECT id, name, venue, event_date, price_f
                 <div class="menu">
                     <a href="home.php" class="<?= ($currentPage == 'Beranda') ? 'active-menu' : ''; ?>">Beranda</a>
                     <a href="konser.php" class="<?= ($currentPage == 'Konser') ? 'active-menu' : ''; ?>">Konser</a>
-                    <a href="tiket.php" class="<?= ($currentPage == 'Tiket') ? 'active-menu' : ''; ?>">Tiket</a>
+                    <a href="tiketKu.php" class="<?= ($currentPage == 'Tiket') ? 'active-menu' : ''; ?>">TiketKu</a>
                     <a href="riwayat.php" class="<?= ($currentPage == 'Riwayat') ? 'active-menu' : ''; ?>">Riwayat</a>
                     <a href="logout.php" class="<?= ($currentPage == 'Riwayat') ? 'active-menu' : ''; ?>">Logout</a>
                 </div>

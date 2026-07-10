@@ -36,12 +36,13 @@ if (isset($_POST['submit'])) {
     }
 
     $total = $harga * $quantity;
+    
 
     $order_code = "ORD" . date("YmdHis");
     $insert = mysqli_query(
         $konek,
-        "INSERT INTO orders (order_code, user_id, concert_id, ticket_category, quantity)
-        VALUES ('$order_code', '$user_id', '$id', '$ticket_category', '$quantity')");
+        "INSERT INTO orders (order_code, user_id, concert_id, ticket_category, quantity, unit_price, total_price)
+        VALUES ('$order_code', '$user_id', '$id', '$ticket_category', '$quantity', '$harga', '$total')");
 
     if ($insert) {
         $_SESSION['success'] = "Tiker berhasil dibeli";
@@ -54,7 +55,7 @@ if (isset($_POST['submit'])) {
     }
 }
 ?>
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 
 <head>
@@ -371,7 +372,7 @@ if (isset($_POST['submit'])) {
                 <div class="menu">
                     <a href="home.php" class="<?= ($currentPage == 'Beranda') ? 'active-menu' : ''; ?>">Beranda</a>
                     <a href="konser.php" class="<?= ($currentPage == 'Konser') ? 'active-menu' : ''; ?>">Konser</a>
-                    <a href="tiket.php" class="<?= ($currentPage == 'Tiket') ? 'active-menu' : ''; ?>">Tiket</a>
+                    <a href="tiketKu.php" class="<?= ($currentPage == 'Tiket') ? 'active-menu' : ''; ?>">Tiket</a>
                     <a href="riwayat.php" class="<?= ($currentPage == 'Riwayat') ? 'active-menu' : ''; ?>">Riwayat</a>
                     <a href="logout.php" class="<?= ($currentPage == 'Riwayat') ? 'active-menu' : ''; ?>">Logout</a>
                 </div>

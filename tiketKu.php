@@ -6,10 +6,17 @@ if (!isset($_SESSION['id'])) {
     header("Location: login.php");
     exit;
 }
-if (isset($_SESSION['id'])) {
-    $username = $_SESSION['username'];
-}
-$currentPage = "home";
+
+$currentPage = "Tiket";
+
+$user_id = $_SESSION['id'];
+
+$query = mysqli_query($konek, "SELECT orders.*, concerts.name, concerts.venue, concerts.event_date 
+FROM orders JOIN concerts 
+ON orders.concert_id = concerts.id 
+WHERE orders.user_id = '$user_id' 
+ORDER BY orders.id DESC");
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,7 +24,7 @@ $currentPage = "home";
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beranda</title>
+    <title>Order</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
@@ -52,7 +59,7 @@ $currentPage = "home";
             font-family: 'Nunito', sans-serif;
         }
 
-        .container-home {
+        .container-tiketKu {
             background-image: url(img/bg_concert.jpg);
             background-size: cover;
             background-position: center;
@@ -122,77 +129,101 @@ $currentPage = "home";
             transition: 0.3s;
         }
 
-        .home-section {
-            position: relative;
-            width: 100%;
-        }
-
-        .home-section img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .home-content {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-
-            text-align: center;
-
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(8px);
-
-            padding: 30px;
-            border-radius: 25px;
-
-            width: 90%;
-            max-width: 700px;
-        }
-
-        .home-content h3 {
-            color: #BE185D;
-            font-size: 48px;
-            font-weight: 900;
-        }
-
-        .home-content p {
-            color: darkgray;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        .btn-group {
-            margin-top: 20px;
+        .title h3 {
             display: flex;
+            align-items: center;
             justify-content: center;
-            gap: 15px;
+            margin-top: 30px;
+
+            font-weight: bolder;
+            color: #BE185D;
         }
 
-        .btn-home {
-            text-decoration: none;
-            background-color: white;
-            color: #3B1F3A;
-            padding: 10px 25px;
-            border-radius: 15px;
+        .title {
+            color: darkgray;
+            font-weight: bolder;
+        }
+
+        .tiketKu-section {
+            width: 90%;
+        }
+
+        .tiketKu-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px;
+            margin-bottom: 20px;
+
+            background-color: var(--white);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
+            border: 2px solid var(--purple-m);
+            border-radius: 18px;
+        }
+
+        .tiketKu-card.cancelled {
+            opacity: 0.45;
+            background-color: #f5f5f5;
+            border: 2px solid #bdbdbd;
+        }
+
+        .tiketKu-card.cancelled .btn-cancel {
+            padding: 8px 20px;
+            border-radius: 20px;
+            pointer-events: none;
+            background: #ccc;
+            border-color: #999;
+            color: #666;
+
+        }
+
+        .tiketKu-card.cancelled h4,
+        .tiketKu-card.cancelled p {
+            color: #888;
+        }
+
+        .left h4 {
+            color: #31204f;
             font-weight: bold;
-            transition: 0.3s;
+            margin-bottom: 8px;
         }
 
-        .btn-home:hover {
-            background-color: #F472B6;
+        .left p {
+            color: darkgray;
+            margin: 3px 0;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        .right h4 {
+            color: #BE185D;
+            font-weight: bolder;
+            margin-bottom: 15px;
+        }
+
+        .btn-cancel {
+            padding: 8px 20px;
+            display: inline-block;
+            text-decoration: none;
+            border: 2px solid #ff4c4c;
+            border-radius: 20px;
+            background-color: #ffe1e1;
+            font-weight: bold;
+            color: darkred;
+        }
+
+        .btn-cancel:hover {
+            background: #ff4c4c;
             color: white;
         }
     </style>
 </head>
 
 <body>
-    <div class="container-home">
-
+    <div class="container-tiketKu">
         <div class="overlay">
-
             <div class="navbar-custom">
                 <div class="logo">
                     Tiket<span class="logo-2">Ian</span>
@@ -208,30 +239,42 @@ $currentPage = "home";
 
             </div>
 
-            <div class="home-section">
-                <img src="img/cr1.png" alt="banner">
+            <div class="title">
+                <h3>Tiket Saya</h3>
+                <p>Tunjukan kode tiketmu di pintu masuk area konser.</p>
             </div>
 
-            <div class="home-content">
-                <h3>
-                    Halo, <?= ($username) ?>!
-                </h3>
-                <p>Temukan konser favoritmu dan pesan tiket dengan mudah.
-                    <br>Jangan sampai kehabisan!
-                </p>
+            <div class="tiketKu-section">
+                <?php while ($data = mysqli_fetch_assoc($query)) { ?>
+                    <div class="tiketKu-card <?= ($data['status'] == 'cancelled') ? 'cancelled' : '' ?>">
+                        <div class="left">
+                            <h4><?= $data['name'] ?></h4>
+                            <p><?= $data['venue'] ?></p>
+                            <p><?= date("d M Y • H:i", strtotime($data['event_date'])) ?></p>
+                            <p>
+                                <?= $data['quantity'] ?> tiket • Dibeli
+                                <?= date("d M Y", strtotime($data['created_at'])) ?>
+                            </p>
+                            <p><?= $data['order_code'] ?></p>
+                        </div>
 
-                <div class="btn-group">
-                    <a href="tiketKu.php" class="btn-home">TiketKu</a>
-                    <a href="konser.php" class="btn-home">Konser</a>
-                    <a href="riwayat.php" class="btn-home">Riwayat</a>
-                </div>
+                        <div class="right">
+                            <h4>Rp <?= number_format($data['total_price'], 0, ",", ".") ?></h4>
+
+                            <?php if ($data['status'] == 'active') { ?>
+                                <a href="cancelled.php?id=<?= $data['id'] ?>" class="btn-cancel">
+                                    Batalkan
+                                </a>
+                            <?php } elseif ($data['status'] == 'cancelled') { ?>
+                                <span class="badge bg-secondary">Dibatalkan</span>
+                            <?php } else { ?>
+                                <span class="badge bg-success">Used</span>
+                            <?php } ?>
+                        </div>
+                    </div>
+                <?php } ?>
             </div>
+
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-        crossorigin="anonymous"></script>
 </body>
-
-</html>
