@@ -260,8 +260,15 @@ ORDER BY orders.id DESC");
                                 </td>
                                 <td><?= date("d M Y, H:i", strtotime($data['created_at'])) ?></td>
                                 <td>
-                                    <a href="edit.php" class="btn-edit">Edit</a>
-                                    <a href="delete.php" class="btn-delete">Delete</a>
+                                    <?php if ($data['status'] == 'active') { ?>
+                                        <a href="edit.php?id=<?= $data['id'] ?>" class="btn-edit">Edit</a>
+                                    <?php } ?>
+
+                                    <?php if ($data['status'] == 'active' || $data['status'] == 'cancelled') { ?>
+                                        <a href="delete.php?id=<?= $data['id'] ?>" class="btn-delete"
+                                        onclick="return confirm('Yakin ingin menghapus data ini?')">
+                                        Delete</a>
+                                    <?php } ?>
                                 </td>
                             </tr>
                         <?php } ?>
