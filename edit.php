@@ -218,7 +218,7 @@ $data = mysqli_fetch_assoc($query);
         .edit-control {
             width: 100%;
             height: 45px;
-            border: 2px solid #FBCFE8;
+            border:     ;
             border-radius: 10px;
             padding: 10px;
             outline: none;
@@ -229,6 +229,47 @@ $data = mysqli_fetch_assoc($query);
 
         .edit-control:focus {
             border-color: #BE185D;
+        }
+
+        .jumlah-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            height: 50px;
+            border: none;
+            background-color: #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .jumlah-box button {
+            width: 40px;
+            height: 80%;
+            border: none;
+            border-radius: 80px;
+            background: white;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, .08);
+            color: #BE185D;
+            font-size: 26px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .jumlah-box button:hover {
+            background: #FBCFE8;
+        }
+
+        .jumlah-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            background: #e0e0e0;
         }
 
         .edit-status {
@@ -278,7 +319,8 @@ $data = mysqli_fetch_assoc($query);
 
         .estimasi h4 {
             font-weight: bold;
-            color: #BE185D;;
+            color: #BE185D;
+            ;
             font-size: 28px;
             font-weight: 800;
         }
@@ -361,8 +403,12 @@ $data = mysqli_fetch_assoc($query);
                     <form action="riwayat.php" method="POST">
                         <div class="row">
                             <label for="" class="edit-jumlah">Jumlah Tiket</label>
-                            <input type="number" id="quantity" name="quantity" class="edit-control"
-                                value="<?= $data['quantity'] ?>" min="1">
+                            <div class="jumlah-box">
+                                <button type="button" id="minus">-</button>
+                                <input type="text" id="quantity" name="quantity" value="<?= $data['quantity'] ?>"
+                                    readonly>
+                                <button type="button" id="plus">+</button>
+                            </div>
 
                             <label for="" class="edit-status">Status</label>
                             <div class="button-status">
@@ -392,31 +438,45 @@ $data = mysqli_fetch_assoc($query);
         </script>
 
     <script>
-        //harga satu tiket dari php
         const harga = <?= $data['unit_price'] ?>;
 
-        //mengambil input jumlah tiket
         const quantity = document.getElementById("quantity");
-
-        //mengambil tulisan total
         const totalHarga = document.getElementById("totalHarga");
 
+        const plus = document.getElementById("plus");
+        const minus = document.getElementById("minus");
+
         function hitungTotal() {
-            //jumlah tiket
+
             let jumlah = parseInt(quantity.value);
 
-            //total
             let total = jumlah * harga;
 
-            //format menjadi rupiah 
-            totalHarga.innerHTML = "Rp " + total.toLocaleString('id-ID');
+            totalHarga.innerHTML =
+                "Rp " + total.toLocaleString('id-ID');
         }
 
-        //pertama kali halaman dibuka
         hitungTotal();
 
-        //ketika jumlah berubah
-        quantity.addEventListener("input", hitungTotal);
+        plus.addEventListener("click", function () {
+
+            quantity.value++;
+
+            hitungTotal();
+
+        });
+
+        minus.addEventListener("click", function () {
+
+            if (quantity.value > 1) {
+
+                quantity.value--;
+
+                hitungTotal();
+
+            }
+
+        });
     </script>
 
 </body>
