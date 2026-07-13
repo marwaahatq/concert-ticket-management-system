@@ -218,7 +218,7 @@ $data = mysqli_fetch_assoc($query);
         .edit-control {
             width: 100%;
             height: 45px;
-            border:     ;
+            border: ;
             border-radius: 10px;
             padding: 10px;
             outline: none;
@@ -259,7 +259,9 @@ $data = mysqli_fetch_assoc($query);
         }
 
         .jumlah-box button:hover {
-            background: #FBCFE8;
+            background: #BE185D;
+            color: white;
+            transition: 0.3s;
         }
 
         .jumlah-box input {
@@ -281,27 +283,30 @@ $data = mysqli_fetch_assoc($query);
         .button-status {
             display: flex;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .button-status button {
             flex: 1;
             height: 45px;
-            border-radius: 12px;
             border: none;
+            border-radius: 10px;
+            background: #F3F4F6;
+            color: #6B7280;
             font-weight: bold;
+            transition: .3s;
+            border-radius: 12px;
             cursor: pointer;
-            transition: 0.3s;
         }
 
-        .button-status .aktif {
-            background: #DCFCE7;
-            color: #15803D;
+        .active-btn {
+            background: #DCFCE7 !important;
+            color: #15803D !important;
         }
 
-        .button-status .batal {
-            background: #FEE2E2;
-            color: #DC2626;
+        .cancel-btn {
+            background: #FEE2E2 !important;
+            color: #DC2626 !important;
         }
 
         .estimasi {
@@ -350,6 +355,7 @@ $data = mysqli_fetch_assoc($query);
             width: 100%;
             height: 40px;
             margin-top: 10px;
+            padding-top: 7px;
             text-align: center;
             text-decoration: none;
             border: 2px solid white;
@@ -412,9 +418,13 @@ $data = mysqli_fetch_assoc($query);
 
                             <label for="" class="edit-status">Status</label>
                             <div class="button-status">
-                                <button type="button" class="aktif">Aktif</button>
-                                <button type="button" class="batal">Batal</button>
+                                <button type="button" id="btnAktif"
+                                    class="<?= $data['status'] == 'active' ? 'active-btn' : '' ?>">Aktif</button>
+                                <button type="button" id="btnBatal"
+                                    class="<?= $data['status'] == 'cancelled' ? 'cancel-btn' : '' ?>">Batal</button>
                             </div>
+
+                            <input type="hidden" id="status" name="status" value="<?= $data['status'] ?>">
                         </div>
 
                         <div class="estimasi">
@@ -475,6 +485,30 @@ $data = mysqli_fetch_assoc($query);
                 hitungTotal();
 
             }
+
+        });
+
+        const btnAktif = document.getElementById("btnAktif");
+        const btnBatal = document.getElementById("btnBatal");
+        const status = document.getElementById("status");
+
+        btnAktif.addEventListener("click", function () {
+
+            status.value = "active";
+
+            btnAktif.classList.add("active-btn");
+
+            btnBatal.classList.remove("cancel-btn");
+
+        });
+
+        btnBatal.addEventListener("click", function () {
+
+            status.value = "cancelled";
+
+            btnBatal.classList.add("cancel-btn");
+
+            btnAktif.classList.remove("active-btn");
 
         });
     </script>
