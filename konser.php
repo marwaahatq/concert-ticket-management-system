@@ -12,23 +12,19 @@ $currentPage = "Konser";
 $cari = "";
 
 if (isset($_GET['cari'])) {
-    $cari = $_GET['cari'];
+    $cari = mysqli_real_escape_string($konek, $_GET['cari']);
 }
 
-$querySQL = mysqli_query($konek, "SELECT * FROM concerts 
-WHERE name LIKE '$cari' ||
- artist LIKE '$cari' ||
-  venue LIKE '$cari'");
+$query = "SELECT id, name, venue, event_date, price_festival
+          FROM concerts";
 
-$queryCari = mysqli_fetch_assoc($querySQL);
-
-if ($cari != '') {
-    $queryCari .= "AND id = '$cari'";
+if ($cari != "") {
+    $query .= " WHERE name LIKE '%$cari%'
+                OR artist LIKE '%$cari%'
+                OR venue LIKE '%$cari%'";
 }
 
-$data = mysqli_fetch_assoc($querySQL);
-
-$queryKonser = mysqli_query($konek, "SELECT id, name, venue, event_date, price_festival FROM concerts");
+$queryKonser = mysqli_query($konek, $query);
 ?>
 <!DOCTYPE html>
 <html lang="en">

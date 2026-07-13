@@ -174,6 +174,13 @@ ORDER BY orders.id DESC");
             background: #FFF8FC;
         }
 
+        .aksi {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+        }
+
         .btn-edit {
             background: #FFF4C9;
             color: #C58A00;
@@ -260,15 +267,18 @@ ORDER BY orders.id DESC");
                                 </td>
                                 <td><?= date("d M Y, H:i", strtotime($data['created_at'])) ?></td>
                                 <td>
-                                    <?php if ($data['status'] == 'active') { ?>
-                                        <a href="edit.php?id=<?= $data['id'] ?>" class="btn-edit">Edit</a>
-                                    <?php } ?>
+                                    <div class="aksi">
+                                        <?php if ($data['status'] == 'active') { ?>
+                                            <a href="edit.php?id=<?= $data['id'] ?>" class="btn-edit">Edit</a>
+                                        <?php } ?>
 
-                                    <?php if ($data['status'] == 'active' || $data['status'] == 'cancelled') { ?>
-                                        <a href="delete.php?id=<?= $data['id'] ?>" class="btn-delete"
-                                        onclick="return confirm('Yakin ingin menghapus data ini?')">
-                                        Delete</a>
-                                    <?php } ?>
+                                        <?php if ($data['status'] == 'active' || $data['status'] == 'cancelled') { ?>
+                                            <a href="delete.php?id=<?= $data['id'] ?>" class="btn-delete"
+                                                onclick="return confirm('Yakin ingin menghapus data ini?')">
+                                                Delete
+                                            </a>
+                                        <?php } ?>
+                                    </div>
                                 </td>
                             </tr>
                         <?php } ?>
