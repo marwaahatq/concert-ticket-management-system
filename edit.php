@@ -16,6 +16,26 @@ if (!isset($_GET['id'])) {
 $id = $_GET['id'];
 $user_id = $_SESSION['id'];
 
+// proses update
+if (isset($_POST['submit'])) {
+
+    $id = $_POST['id'];
+    $quantity = $_POST['quantity'];
+    $status = $_POST['status'];
+
+    // ambil harga satuan
+    $q = mysqli_query($konek, "SELECT unit_price FROM orders WHERE id='$id' AND user_id='$user_id'");
+
+    $order = mysqli_fetch_assoc($q);
+    $total = $quantity * $order['unit_price'];
+
+    mysqli_query($konek, "UPDATE orders SET quantity='$quantity', status='$status', total_price='$total'
+                          WHERE id='$id' AND user_id='$user_id'");
+
+    header("Location: riwayat.php");
+    exit;
+}
+
 // ambil data konser yang dipilih
 $query = mysqli_query($konek, "SELECT orders.*, concerts.name, concerts.venue
 FROM orders JOIN concerts
@@ -218,7 +238,7 @@ $data = mysqli_fetch_assoc($query);
         .edit-control {
             width: 100%;
             height: 45px;
-            border: ;
+            border: none;
             border-radius: 10px;
             padding: 10px;
             outline: none;
@@ -406,7 +426,7 @@ $data = mysqli_fetch_assoc($query);
 
 
                 <div class="card-body">
-                    <form action="riwayat.php" method="POST">
+                    <form action="" method="POST">
                         <div class="row">
                             <label for="" class="edit-jumlah">Jumlah Tiket</label>
                             <div class="jumlah-box">
@@ -436,6 +456,8 @@ $data = mysqli_fetch_assoc($query);
                             <button type="submit" name="submit" class="btn-submit">SIMPAN</button>
                             <a href="riwayat.php" class="btn-cancel">Batal</a>
                         </div>
+
+                        <input type="hidden" name="id" value="<?= $data['id'] ?>">
 
                     </form>
 
